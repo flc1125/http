@@ -4,9 +4,13 @@
 
 ## 安装
 
+```
+composer require flc\http
+```
+
 ## 使用
 
-> 拷贝官方的，:sweat_smile: :sweat_smile:
+> 使用文档，拷贝官方的，:sweat_smile: :sweat_smile:
 
 ### 创建请求
 
