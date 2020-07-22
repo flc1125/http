@@ -1,10 +1,9 @@
 <?php
 
-namespace Illuminate\Http\Client;
+namespace Flc\Http;
 
 use Exception;
 
 class ConnectionException extends Exception
 {
-    //
 }
