@@ -8,6 +8,8 @@
 composer require flc\http
 ```
 
+> 非稳定版，请勿用于生产
+
 ## 使用
 
 > 使用文档，拷贝官方的，:sweat_smile: :sweat_smile:

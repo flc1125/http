@@ -40,7 +40,7 @@ class Request
      *
      * @var array
      */
-    protected $pendingFiles = [];
+    protected $pendingFiles = array();
 
     /**
      * The request cookies.
@@ -54,7 +54,7 @@ class Request
      *
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
 
     /**
      * The number of times to try the request.
@@ -79,9 +79,9 @@ class Request
     {
         $this->asJson();
 
-        $this->options = [
+        $this->options = array(
             'http_errors' => false,
-        ];
+        );
     }
 
     /**
@@ -147,16 +147,16 @@ class Request
      *
      * @return $this
      */
-    public function attach($name, $contents, $filename = null, array $headers = [])
+    public function attach($name, $contents, $filename = null, array $headers = array())
     {
         $this->asMultipart();
 
-        $this->pendingFiles[] = array_filter([
+        $this->pendingFiles[] = array_filter(array(
             'name'     => $name,
             'contents' => $contents,
             'headers'  => $headers,
             'filename' => $filename,
-        ]);
+        ));
 
         return $this;
     }
@@ -194,7 +194,7 @@ class Request
      */
     public function contentType(string $contentType)
     {
-        return $this->withHeaders(['Content-Type' => $contentType]);
+        return $this->withHeaders(array('Content-Type' => $contentType));
     }
 
     /**
@@ -216,7 +216,7 @@ class Request
      */
     public function accept($contentType)
     {
-        return $this->withHeaders(['Accept' => $contentType]);
+        return $this->withHeaders(array('Accept' => $contentType));
     }
 
     /**
@@ -228,9 +228,9 @@ class Request
      */
     public function withHeaders(array $headers)
     {
-        $this->options = array_merge_recursive($this->options, [
+        $this->options = array_merge_recursive($this->options, array(
             'headers' => $headers,
-        ]);
+        ));
 
         return $this;
     }
@@ -245,7 +245,7 @@ class Request
      */
     public function withBasicAuth(string $username, string $password)
     {
-        $this->options['auth'] = [$username, $password];
+        $this->options['auth'] = array($username, $password);
 
         return $this;
     }
@@ -260,7 +260,7 @@ class Request
      */
     public function withDigestAuth($username, $password)
     {
-        $this->options['auth'] = [$username, $password, 'digest'];
+        $this->options['auth'] = array($username, $password, 'digest');
 
         return $this;
     }
@@ -290,9 +290,9 @@ class Request
      */
     public function withCookies(array $cookies, string $domain)
     {
-        $this->options = array_merge_recursive($this->options, [
+        $this->options = array_merge_recursive($this->options, array(
                 'cookies' => CookieJar::fromArray($cookies, $domain),
-            ]);
+            ));
 
         return $this;
     }
@@ -375,9 +375,9 @@ class Request
      */
     public function get($url, $query = null)
     {
-        return $this->send('GET', $url, [
+        return $this->send('GET', $url, array(
             'query' => $query,
-        ]);
+        ));
     }
 
     /**
@@ -390,9 +390,9 @@ class Request
      */
     public function head($url, $query = null)
     {
-        return $this->send('HEAD', $url, [
+        return $this->send('HEAD', $url, array(
             'query' => $query,
-        ]);
+        ));
     }
 
     /**
@@ -403,11 +403,11 @@ class Request
      *
      * @return \Illuminate\Http\Client\Response
      */
-    public function post($url, $data = [])
+    public function post($url, $data = array())
     {
-        return $this->send('POST', $url, [
+        return $this->send('POST', $url, array(
             $this->bodyFormat => $data,
-        ]);
+        ));
     }
 
     /**
@@ -418,11 +418,11 @@ class Request
      *
      * @return \Illuminate\Http\Client\Response
      */
-    public function patch($url, $data = [])
+    public function patch($url, $data = array())
     {
-        return $this->send('PATCH', $url, [
+        return $this->send('PATCH', $url, array(
             $this->bodyFormat => $data,
-        ]);
+        ));
     }
 
     /**
@@ -433,11 +433,11 @@ class Request
      *
      * @return \Illuminate\Http\Client\Response
      */
-    public function put($url, $data = [])
+    public function put($url, $data = array())
     {
-        return $this->send('PUT', $url, [
+        return $this->send('PUT', $url, array(
             $this->bodyFormat => $data,
-        ]);
+        ));
     }
 
     /**
@@ -448,11 +448,11 @@ class Request
      *
      * @return \Illuminate\Http\Client\Response
      */
-    public function delete($url, $data = [])
+    public function delete($url, $data = array())
     {
-        return $this->send('DELETE', $url, empty($data) ? [] : [
+        return $this->send('DELETE', $url, empty($data) ? array() : array(
             $this->bodyFormat => $data,
-        ]);
+        ));
     }
 
     /**
@@ -466,7 +466,7 @@ class Request
      *
      * @throws \Exception
      */
-    public function send(string $method, string $url, array $options = [])
+    public function send(string $method, string $url, array $options = array())
     {
         $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
 
@@ -484,7 +484,7 @@ class Request
             }
         }
 
-        [$this->pendingBody, $this->pendingFiles] = [null, []];
+        [$this->pendingBody, $this->pendingFiles] = array(null, array());
 
         return $this->retryCallback($this->tries ?? 1, function () use ($method, $url, $options) {
             try {
@@ -511,10 +511,10 @@ class Request
      */
     protected function parseMultipartBodyFormat(array $data)
     {
-        $result = [];
+        $result = array();
 
         foreach ($data as $key => $value) {
-            $result[] = is_array($value) ? $value : ['name' => $key, 'contents' => $value];
+            $result[] = is_array($value) ? $value : array('name' => $key, 'contents' => $value);
         }
 
         return $result;
@@ -527,9 +527,9 @@ class Request
      */
     public function buildClient()
     {
-        return new Client([
+        return new Client(array(
             'cookies' => true,
-        ]);
+        ));
     }
 
     /**

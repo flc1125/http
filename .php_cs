@@ -4,7 +4,7 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules(array(
         '@Symfony' => true,
-        'array_syntax' => array('syntax' => 'short'),
+        'array_syntax' => array('syntax' => 'long'),
         'ordered_imports' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,

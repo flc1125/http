@@ -2,8 +2,6 @@
 
 namespace Flc\Http;
 
-use GuzzleHttp\Client;
-
 /**
  * HTTP 客户端工具类
  *
@@ -16,7 +14,7 @@ class Http
      *
      * @var array
      */
-    public static function create($config = [])
+    public static function create($config = array())
     {
         $request = new Request();
 
@@ -34,8 +32,9 @@ class Http
     /**
      * 魔术方法转发处理
      *
-     * @param  string $method
-     * @param  mixed $parameters
+     * @param string $method
+     * @param mixed  $parameters
+     *
      * @return mixed
      */
     public static function __callStatic($method, $parameters)
