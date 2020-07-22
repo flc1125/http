@@ -2,17 +2,15 @@
 
 namespace Flc\Http;
 
-use GuzzleHttp\Client;
-
 /**
  * HTTP 客户端工具类
  *
  * @author Flc <2020-7-22 21:07:51>
  */
-class Http
+class Client
 {
     /**
-     * 自定义创建相关实例
+     * 自定义配置创建相关实例
      *
      * @var array
      */
@@ -34,8 +32,9 @@ class Http
     /**
      * 魔术方法转发处理
      *
-     * @param  string $method
-     * @param  mixed $parameters
+     * @param string $method
+     * @param mixed  $parameters
+     *
      * @return mixed
      */
     public static function __callStatic($method, $parameters)

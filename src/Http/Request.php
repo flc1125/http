@@ -4,6 +4,7 @@ namespace Flc\Http;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Exception\ConnectException;
 
 /**
  * 创建一个客户端请求实例
@@ -488,7 +489,11 @@ class Request
 
         return $this->retryCallback($this->tries ?? 1, function () use ($method, $url, $options) {
             try {
-                $response = new Response($this->buildClient()->request($method, $url, $options));
+                $response = new Response(
+                    $this->buildClient()
+                        ->request($method, $url, $this->mergeOptions($options))
+                );
+
                 $response->cookies = $this->cookies;
 
                 if ($this->tries > 1 && ! $response->successful()) {
@@ -530,6 +535,18 @@ class Request
         return new Client([
             'cookies' => true,
         ]);
+    }
+
+    /**
+     * Merge the given options with the current request options.
+     *
+     * @param array $options
+     *
+     * @return array
+     */
+    public function mergeOptions(...$options)
+    {
+        return array_merge_recursive($this->options, ...$options);
     }
 
     /**

@@ -21,9 +21,9 @@ composer require flc\http
 ```php
 <?php
 
-use Flc\Http\Http;
+use Flc\Http\Client;
 
-$response = Http::get('http://test.com');
+$response = Client::get('http://test.com');
 ```
 
 `get` 方法返回一个 `Flc\Http\Response` 的实例，该实例提供了大量的方法来检查请求的响应：
@@ -47,7 +47,7 @@ $response->headers() : array;
 ```php
 <?php
 
-return Http::get('http://test.com/users/1')['name'];
+return Client::get('http://test.com/users/1')['name'];
 ```
 
 ### 请求数据
@@ -57,7 +57,7 @@ return Http::get('http://test.com/users/1')['name'];
 ```php
 <?php
 
-$response = Http::post('http://test.com/users', [
+$response = Client::post('http://test.com/users', [
     'name' => 'Steve',
     'role' => 'Network Administrator',
 ]);
@@ -70,7 +70,7 @@ $response = Http::post('http://test.com/users', [
 ```php
 <?php
 
-$response = Http::asForm()->post('http://test.com/users', [
+$response = Client::asForm()->post('http://test.com/users', [
     'name' => 'Sara',
     'role' => 'Privacy Consultant',
 ]);
@@ -83,7 +83,7 @@ $response = Http::asForm()->post('http://test.com/users', [
 ```php
 <?php
 
-$response = Http::attach(
+$response = Client::attach(
     'attachment', file_get_contents('photo.jpg'), 'photo.jpg'
 )->post('http://test.com/attachments');
 ```
@@ -95,7 +95,7 @@ $response = Http::attach(
 
 $photo = fopen('photo.jpg', 'r');
 
-$response = Http::attach(
+$response = Client::attach(
     'attachment', $photo, 'photo.jpg'
 )->post('http://test.com/attachments');
 ```
@@ -107,7 +107,7 @@ $response = Http::attach(
 ```php
 <?php
 
-$response = Http::withHeaders([
+$response = Client::withHeaders([
     'X-First' => 'foo',
     'X-Second' => 'bar'
 ])->post('http://test.com/users', [
@@ -123,10 +123,10 @@ $response = Http::withHeaders([
 <?php
 
 // Basic 认证...
-$response = Http::withBasicAuth('taylor@laravel.com', 'secret')->post(...);
+$response = Client::withBasicAuth('taylor@laravel.com', 'secret')->post(...);
 
 // Digest 认证...
-$response = Http::withDigestAuth('taylor@laravel.com', 'secret')->post(...);
+$response = Client::withDigestAuth('taylor@laravel.com', 'secret')->post(...);
 ```
 
 ### Bearer Token（Token 令牌）
@@ -136,7 +136,7 @@ $response = Http::withDigestAuth('taylor@laravel.com', 'secret')->post(...);
 ```php
 <?php
 
-$response = Http::withToken('token')->post(...);
+$response = Client::withToken('token')->post(...);
 ```
 
 ### 重试
@@ -146,7 +146,7 @@ $response = Http::withToken('token')->post(...);
 ```php
 <?php
 
-$response = Http::retry(3, 100)->post(...);
+$response = Client::retry(3, 100)->post(...);
 ```
 
 如果所有的请求都失败了，`Flc\Http\RequestException` 异常将会被抛出。
@@ -175,7 +175,7 @@ $response->serverError();
 ```php
 <?php
 
-$response = Http::post(...);
+$response = Client::post(...);
 
 // 在客户端或服务端错误发生时抛出异常
 $response->throw();
@@ -190,7 +190,7 @@ return $response['user']['id'];
 ```php
 <?php
 
-return Http::post(...)->throw()->json();
+return Client::post(...)->throw()->json();
 ```
 
 ## LICENSE
