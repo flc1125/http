@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -12,6 +12,9 @@ use Flc\Http\Http;
 //     'user' => 123123,
 // ]);
 
-$ret = Http::baseUrl('https://request.worktile.com/i0z0lKilS')->withBody('asdfasdf', 'text/plain')->get('/');
+$ret = Http::baseUrl('https://request.worktile.com/i0z0lKilS')
+    ->withToken('taylor@laravel.com')
+    ->post('/', ['a' => 1, 'b' => 21123]);
 
-print_r($ret->json());
+print_r($ret->body());
+print_r($ret->cookies());

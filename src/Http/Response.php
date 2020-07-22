@@ -2,7 +2,17 @@
 
 namespace Flc\Http;
 
-class Response
+use ArrayAccess;
+use LogicException;
+
+/**
+ * 输出类
+ *
+ * @author Flc <2020-7-22 10:41:53>
+ *
+ * @see https://github.com/illuminate/http/blob/master/Client/Response.php
+ */
+class Response implements ArrayAccess
 {
     /**
      * The underlying PSR response.
@@ -21,7 +31,8 @@ class Response
     /**
      * Create a new response instance.
      *
-     * @param  \Psr\Http\Message\MessageInterface  $response
+     * @param \Psr\Http\Message\MessageInterface $response
+     *
      * @return void
      */
     public function __construct($response)
@@ -66,7 +77,8 @@ class Response
     /**
      * Get a header from the response.
      *
-     * @param  string  $header
+     * @param string $header
+     *
      * @return string
      */
     public function header(string $header)
@@ -205,7 +217,8 @@ class Response
     /**
      * Determine if the given offset exists.
      *
-     * @param  string  $offset
+     * @param string $offset
+     *
      * @return bool
      */
     public function offsetExists($offset)
@@ -216,12 +229,42 @@ class Response
     /**
      * Get the value for a given offset.
      *
-     * @param  string  $offset
+     * @param string $offset
+     *
      * @return mixed
      */
     public function offsetGet($offset)
     {
         return $this->json()[$offset];
+    }
+
+    /**
+     * Set the value at the given offset.
+     *
+     * @param string $offset
+     * @param mixed  $value
+     *
+     * @return void
+     *
+     * @throws \LogicException
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new LogicException('Response data may not be mutated using array access.');
+    }
+
+    /**
+     * Unset the value at the given offset.
+     *
+     * @param string $offset
+     *
+     * @return void
+     *
+     * @throws \LogicException
+     */
+    public function offsetUnset($offset)
+    {
+        throw new LogicException('Response data may not be mutated using array access.');
     }
 
     /**
@@ -237,8 +280,9 @@ class Response
     /**
      * Dynamically proxy other methods to the underlying response.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
