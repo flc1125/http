@@ -2,6 +2,8 @@
 
 namespace Flc\Http;
 
+use InvalidArgumentException;
+
 /**
  * HTTP 客户端工具类
  *
@@ -10,7 +12,91 @@ namespace Flc\Http;
 class Client
 {
     /**
-     * 自定义配置创建相关实例
+     * The application instance.
+     *
+     * @var \Illuminate\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * 连接示例
+     *
+     * @var array
+     */
+    protected $requests = [];
+
+    /**
+     * 创建新的 客户端链接示例 实例
+     *
+     * @param \Illuminate\Foundation\Application $app
+     */
+    public function __construct($app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * 获取一个单例连接
+     *
+     * @param string $name
+     *
+     * @return \Flc\Http\Request
+     */
+    public function request($name = null)
+    {
+        $name = $name ?? $this->getDefaultRequest();
+
+        if (! isset($this->requests[$name])) {
+            $this->requests[$name] = $this->resolve($name);
+        }
+
+        return $this->requests[$name];
+    }
+
+    /**
+     * 返回默认的连接名
+     *
+     * @return string
+     */
+    protected function getDefaultRequest()
+    {
+        return $this->app['config']['http.default'];
+    }
+
+    /**
+     * 通过别名生成连接实例
+     *
+     * @param string $name
+     *
+     * @return \Flc\Http\Request
+     */
+    protected function resolve($name)
+    {
+        $config = $this->getConfig($name);
+
+        return $this->create($config);
+    }
+
+    /**
+     * 获取配置
+     *
+     * @param string $name 配置别名
+     *
+     * @return array
+     */
+    protected function getConfig($name)
+    {
+        $servers = $this->app['config']['http.servers'];
+
+        if (! isset($servers[$name])) {
+            throw new InvalidArgumentException("Server [{$name}] not configured.");
+        }
+
+        return $servers[$name];
+    }
+
+    /**
+     * 通过配置创建相关实例
      *
      * @var array
      */
